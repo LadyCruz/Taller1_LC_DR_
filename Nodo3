@@ -1,0 +1,64 @@
+#!/usr/bin/python
+import rospy
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist
+from std_msgs.msg import Bool
+from sensor_msgs.msg import LaserScan
+class Node():
+	def __init__(self):
+		self.rospy=rospy
+		self.rospy.init_node("nodo_control",anonymous=True)
+		self.initParameters()
+		self.initSubscribers()
+		self.initPublishers()
+		self.main()
+	def initParameters(self):
+		self.topic_ang="/angular"
+		self.topic_lin="/lineal"
+		self.topic_aux="/aux_topic"
+		self.topic_vel="/cmd_vel"
+		self.msg_ang=String()
+		self.msg_lin=String()
+		self.msg_vel=Twist()
+		self.change_aux=False
+		self.change_ang=False
+		self.change_lin=False
+		self.rate=self.rospy.Rate(50)	
+		return
+	def callback_ang(self, msg):
+		self.msg_ang=msg.data
+		self.change_ang=True
+		return
+	def callback_lin(self, msg):
+		self.msg_lin=msg.data
+		self.change_lin=True
+		return	
+	def callback_aux(self, msg):
+		self.msg_aux=msg.data
+		self.change_aux=True
+		return	
+	def initSubscribers(self):
+		self.sub_ang=self.rospy.Subscriber(self.topic_ang, String, self.callback_ang)
+		self.sub_lin=self.rospy.Subscriber(self.topic_lin, String, self.callback_lin)
+		self.sub_aux=self.rospy.Subscriber(self.topic_aux, Bool, self.callback_aux)
+		return
+	def initPublishers(self):
+		self.pub_vel=self.rospy.Publisher(self.topic_vel, Twist, queue_size=10)
+		return
+	def main(self):
+		print("Nodo bien")
+		while not self.rospy.is_shutdown():
+			if self.change_ang and self.change_lin:
+				self.msg_vel.linear.x=float (self.msg_lin)
+				self.msg_vel.angular.z=float(self.msg_ang)
+				self.pub_vel.publish(self.msg_vel)
+				self.change_ang=False
+				self.change_lin=False
+			self.rate.sleep()
+if __name__=="__main__":
+	try:
+		print("Inciando Nodo bien bien")
+		object=Node()
+	except rospy.ROSInterruptException:
+		print("Finalizando Nodo")
+		pass
