@@ -1,0 +1,29 @@
+largo valor;
+largo valor1;
+Cuerda POT1;
+Cuerda POT2;
+Cadena de valores;
+ 
+configuración vacía () {
+  // Inicializamos la comunicación serial.
+  Serial.begin (9600);
+  }
+ 
+bucle de vacío () {
+  // leemos del pin A0 valor
+  valor = analogRead (A0);
+  valor1 = analogRead (A2);
+  Cadena POT1 = Cadena ((valor * 5) / 1023);
+  Cadena POT2 = Cadena ((valor1 * 5) / 1023);
+  
+  valores = POT1 + String ('.') + POT2;
+  
+ 
+  // Imprimimos por el monitor serie
+  //Serial.print("El valor POT es = ");
+  Serial.println (valores);
+  retraso (50);
+  // Imprimimos por el monitor serie
+  
+ 
+}
