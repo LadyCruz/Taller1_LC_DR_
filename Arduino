@@ -1,0 +1,29 @@
+long valor;
+long valor1;
+String POT1;
+String POT2;
+String valores;
+ 
+void setup() {
+  //Inicializamos la comunicaciÃ³n serial
+  Serial.begin(9600);
+  }
+ 
+void loop() {
+  // leemos del pin A0 valor
+  valor = analogRead(A0);
+  valor1= analogRead(A2);
+  String POT1=String ((valor*5)/1023);
+  String POT2=String ((valor1*5)/1023);
+  
+  valores=POT1+String('.')+POT2;
+  
+ 
+  //Imprimimos por el monitor serie
+  //Serial.print("El valor POT es = ");
+  Serial.println(valores);
+  delay(50);
+  //Imprimimos por el monitor serie
+  
+ 
+}
